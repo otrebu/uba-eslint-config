@@ -1,4 +1,5 @@
 echo Running some checks
 
 pnpm run lint
-pnpm run format:check
+pnpm run format
+git add -u
