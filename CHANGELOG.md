@@ -1,3 +1,9 @@
+## [1.0.3](https://github.com/otrebu/uba-eslint-config/compare/v1.0.2...v1.0.3) (2025-10-06)
+
+### Bug Fixes
+
+- remove scope and bin field from package.json ([713a6f9](https://github.com/otrebu/uba-eslint-config/commit/713a6f9ada9dd635699994f56f21819dc164309a))
+
 ## [1.0.2](https://github.com/otrebu/uba-eslint-config/compare/v1.0.1...v1.0.2) (2025-10-06)
 
 ### Bug Fixes
