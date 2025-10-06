@@ -1,5 +1,5 @@
 {
-  "name": "@uba/eslint-config",
+  "name": "uba-eslint-config",
   "version": "1.0.2",
   "description": "ESLint 9 configuration with TypeScript, React, and comprehensive plugin support",
   "keywords": [
@@ -13,9 +13,6 @@
   "author": "Uberto Rapizzi",
   "type": "module",
   "main": "index.js",
-  "bin": {
-    "@uba/eslint-config": "./index.js"
-  },
   "scripts": {
     "fix": "prettier --write . && eslint --fix .",
     "format": "prettier --write .",
