@@ -1,4 +1,4 @@
-# @uba/eslint-config
+# uba-eslint-config
 
 A comprehensive ESLint 9 configuration with TypeScript, React, and extensive plugin support.
 
@@ -34,7 +34,7 @@ A comprehensive ESLint 9 configuration with TypeScript, React, and extensive plu
 ## Installation
 
 ```bash
-pnpm add -D @uba/eslint-config
+pnpm add -D uba-eslint-config
 ```
 
 ## Usage
@@ -42,7 +42,7 @@ pnpm add -D @uba/eslint-config
 ### Basic Usage
 
 ```js
-import { ubaEslintConfig } from "@uba/eslint-config";
+import { ubaEslintConfig } from "uba-eslint-config";
 
 export default [...ubaEslintConfig];
 ```
@@ -50,7 +50,7 @@ export default [...ubaEslintConfig];
 ### Custom Configuration
 
 ```js
-import { generateEslintConfig } from "@uba/eslint-config";
+import { generateEslintConfig } from "uba-eslint-config";
 
 export default generateEslintConfig({
   appType: "fullstack", // or "backendOnly"
@@ -62,7 +62,7 @@ export default generateEslintConfig({
 ### Fine-grained Control
 
 ```js
-import { generateEslintConfigByFeatures } from "@uba/eslint-config";
+import { generateEslintConfigByFeatures } from "uba-eslint-config";
 
 export default generateEslintConfigByFeatures({
   shouldEnableTypescript: true,
@@ -85,7 +85,7 @@ export default generateEslintConfigByFeatures({
 This package also exports Prettier configurations:
 
 ```js
-import { ubaPrettierConfig } from "@uba/eslint-config";
+import { ubaPrettierConfig } from "uba-eslint-config";
 
 export default ubaPrettierConfig;
 ```
@@ -93,7 +93,7 @@ export default ubaPrettierConfig;
 Or generate custom config:
 
 ```js
-import { generatePrettierConfig } from "@uba/eslint-config";
+import { generatePrettierConfig } from "uba-eslint-config";
 
 export default generatePrettierConfig({
   appType: "fullstack", // or "backendOnly"
