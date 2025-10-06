@@ -1,3 +1,9 @@
+# [1.1.0](https://github.com/otrebu/uba-eslint-config/compare/v1.0.3...v1.1.0) (2025-10-06)
+
+### Features
+
+- **deps:** upgrade development dependencies ([c1a1b43](https://github.com/otrebu/uba-eslint-config/commit/c1a1b430134241e2f64e759eff5380cadc4234a4))
+
 ## [1.0.3](https://github.com/otrebu/uba-eslint-config/compare/v1.0.2...v1.0.3) (2025-10-06)
 
 ### Bug Fixes
