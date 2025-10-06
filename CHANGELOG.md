@@ -1,0 +1,11 @@
+# 1.0.0 (2025-10-06)
+
+### Bug Fixes
+
+- add pnpm-lock.yaml for GitHub Actions cache ([5cf7afa](https://github.com/otrebu/uba-eslint-config/commit/5cf7afa61ab50ed7fbb4c5e686242f439fe21350))
+- auto-format files in pre-commit hook ([0e85337](https://github.com/otrebu/uba-eslint-config/commit/0e85337d7d02dc69e8e642cd213072055b0a5f79))
+- remove pnpm version from GitHub Actions to use packageManager field ([bc8747a](https://github.com/otrebu/uba-eslint-config/commit/bc8747a39b7b0a2a3c34dac5eb906dd12b567723))
+
+### Features
+
+- initial commit of @uba/eslint-config ([7c614bc](https://github.com/otrebu/uba-eslint-config/commit/7c614bc3a3950f97618e8b2b9bbc38c417c9c9ab))
