@@ -1,3 +1,9 @@
+## [1.0.2](https://github.com/otrebu/uba-eslint-config/compare/v1.0.1...v1.0.2) (2025-10-06)
+
+### Bug Fixes
+
+- add publishConfig for public npm access ([5c80852](https://github.com/otrebu/uba-eslint-config/commit/5c808528c2c08f22307d30acf235c8bb77e80e38))
+
 ## [1.0.1](https://github.com/otrebu/uba-eslint-config/compare/v1.0.0...v1.0.1) (2025-10-06)
 
 # 1.0.0 (2025-10-06)
