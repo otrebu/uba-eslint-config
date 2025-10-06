@@ -1,0 +1,4 @@
+echo Running some checks
+
+pnpm run lint
+pnpm run format:check
