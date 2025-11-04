@@ -1,17 +1,18 @@
 import { describe, test, expect } from "vitest";
 import { ESLint } from "eslint";
-import { generateEslintConfig, generateEslintConfigByFeatures } from "../index.js";
+import {
+  generateEslintConfig,
+  generateEslintConfigByFeatures,
+} from "../index.js";
 
 describe("ESLint Config Loading", () => {
   test("config loads without errors", async () => {
-    const eslint = new ESLint({
-      overrideConfigFile: "./eslint.config.js",
-    });
+    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
 
     expect(eslint).toBeDefined();
 
     // Try linting a simple file to ensure config actually works
-    const results = await eslint.lintText('const x = 1;\n', {
+    const results = await eslint.lintText("const x = 1;\n", {
       filePath: "test.js",
     });
 
@@ -65,7 +66,10 @@ describe("ESLint Config Loading", () => {
     // Config should have entries for TypeScript files
     const hasTypeScriptFiles = config.some((entry) => {
       const files = entry.files || [];
-      return files.some((pattern) => pattern.includes("**/*.ts") || pattern.includes("**/*.tsx"));
+      return files.some(
+        (pattern) =>
+          pattern.includes("**/*.ts") || pattern.includes("**/*.tsx"),
+      );
     });
     expect(hasTypeScriptFiles).toBe(true);
   });
@@ -108,15 +112,13 @@ describe("ESLint Config Loading", () => {
   });
 
   test("config works with different file types", async () => {
-    const eslint = new ESLint({
-      overrideConfigFile: "./eslint.config.js",
-    });
+    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
 
     const fileTypes = [
-      { code: 'const x = 1;\n', path: "test.js" },
-      { code: 'const x: number = 1;\n', path: "test.ts" },
-      { code: 'export const Component = () => <div />;\n', path: "test.jsx" },
-      { code: 'export const Component = () => <div />;\n', path: "test.tsx" },
+      { code: "const x = 1;\n", path: "test.js" },
+      { code: "const x: number = 1;\n", path: "test.ts" },
+      { code: "export const Component = () => <div />;\n", path: "test.jsx" },
+      { code: "export const Component = () => <div />;\n", path: "test.tsx" },
     ];
 
     for (const { code, path } of fileTypes) {

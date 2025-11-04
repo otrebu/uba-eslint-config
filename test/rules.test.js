@@ -3,9 +3,7 @@ import { ESLint } from "eslint";
 
 describe("ESLint Rule Configuration", () => {
   test("no-console rule catches console statements", async () => {
-    const eslint = new ESLint({
-      overrideConfigFile: "./eslint.config.js",
-    });
+    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
 
     const codeWithConsole = 'console.log("test");\n';
     const results = await eslint.lintText(codeWithConsole, {
@@ -21,14 +19,10 @@ describe("ESLint Rule Configuration", () => {
   });
 
   test("no-var rule catches var declarations", async () => {
-    const eslint = new ESLint({
-      overrideConfigFile: "./eslint.config.js",
-    });
+    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
 
-    const codeWithVar = 'var x = 1;\n';
-    const results = await eslint.lintText(codeWithVar, {
-      filePath: "test.js",
-    });
+    const codeWithVar = "var x = 1;\n";
+    const results = await eslint.lintText(codeWithVar, { filePath: "test.js" });
 
     // Should have errors since no-var is enabled
     expect(results[0].errorCount).toBeGreaterThan(0);
@@ -39,9 +33,7 @@ describe("ESLint Rule Configuration", () => {
   });
 
   test("TypeScript rules are enabled for .ts files", async () => {
-    const eslint = new ESLint({
-      overrideConfigFile: "./eslint.config.js",
-    });
+    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
 
     const config = await eslint.calculateConfigForFile("test.ts");
 
@@ -56,9 +48,7 @@ describe("ESLint Rule Configuration", () => {
   });
 
   test("React rules are enabled for .jsx files", async () => {
-    const eslint = new ESLint({
-      overrideConfigFile: "./eslint.config.js",
-    });
+    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
 
     const config = await eslint.calculateConfigForFile("test.jsx");
 
@@ -76,9 +66,7 @@ describe("ESLint Rule Configuration", () => {
   });
 
   test("import rules are configured", async () => {
-    const eslint = new ESLint({
-      overrideConfigFile: "./eslint.config.js",
-    });
+    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
 
     const config = await eslint.calculateConfigForFile("test.js");
 
@@ -90,9 +78,7 @@ describe("ESLint Rule Configuration", () => {
   });
 
   test("unicorn rules are configured", async () => {
-    const eslint = new ESLint({
-      overrideConfigFile: "./eslint.config.js",
-    });
+    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
 
     const config = await eslint.calculateConfigForFile("test.js");
 
@@ -104,12 +90,10 @@ describe("ESLint Rule Configuration", () => {
   });
 
   test("max-params rule is set to 3", async () => {
-    const eslint = new ESLint({
-      overrideConfigFile: "./eslint.config.js",
-    });
+    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
 
     // Test with 4 parameters (should fail)
-    const codeWithTooManyParams = 'function test(a, b, c, d) {}\n';
+    const codeWithTooManyParams = "function test(a, b, c, d) {}\n";
     const results = await eslint.lintText(codeWithTooManyParams, {
       filePath: "test.js",
     });
@@ -122,9 +106,7 @@ describe("ESLint Rule Configuration", () => {
   });
 
   test("prefer-template rule is enabled", async () => {
-    const eslint = new ESLint({
-      overrideConfigFile: "./eslint.config.js",
-    });
+    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
 
     const codeWithConcatenation = 'const message = "Hello " + name;\n';
     const results = await eslint.lintText(codeWithConcatenation, {
