@@ -44,8 +44,8 @@ jobs:
         if: steps.format-check.outcome == 'failure' && github.event_name == 'pull_request'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'chore: apply Prettier formatting'
-          file_pattern: ':!.github/workflows/** .'
+          commit_message: "chore: apply Prettier formatting"
+          file_pattern: ":!.github/workflows/** ."
 
       - name: Run lint
         if: steps.format-check.outcome == 'success' || steps.auto-commit.outputs.changes_detected != 'true'
