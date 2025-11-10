@@ -62,6 +62,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Update npm for Trusted Publishing
+        run: npm install -g npm@latest
+
       - name: Release (Trusted Publishing)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
