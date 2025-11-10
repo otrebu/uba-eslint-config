@@ -18,7 +18,7 @@ export default {
       },
     ],
     "@semantic-release/release-notes-generator",
-    "@semantic-release/npm",
+    ["@semantic-release/npm", { npmPublish: true, provenance: true }],
     ["@semantic-release/changelog", { changelogFile: "CHANGELOG.md" }],
     [
       "@semantic-release/git",
