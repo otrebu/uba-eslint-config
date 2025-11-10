@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/otrebu/uba-eslint-config/compare/v1.1.1...v1.1.2) (2025-11-10)
+
+### Bug Fixes
+
+- invalid npm token authentication error ([#5](https://github.com/otrebu/uba-eslint-config/issues/5)) ([6965e23](https://github.com/otrebu/uba-eslint-config/commit/6965e231b2ff94c7d863c7adbc8245e0aff447ec))
+- npm OIDC authentication with version upgrades ([#6](https://github.com/otrebu/uba-eslint-config/issues/6)) ([66ca289](https://github.com/otrebu/uba-eslint-config/commit/66ca289d2bf706d2c5da9e21380626cad3571d70))
+
 ## [1.1.1](https://github.com/otrebu/uba-eslint-config/compare/v1.1.0...v1.1.1) (2025-10-06)
 
 # [1.1.0](https://github.com/otrebu/uba-eslint-config/compare/v1.0.3...v1.1.0) (2025-10-06)
