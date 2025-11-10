@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -31,20 +31,24 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run format check
+        id: format-check
+        continue-on-error: true
         run: pnpm run format:check
 
       - name: Auto-fix formatting issues
-        if: failure() && github.event_name == 'pull_request'
+        if: steps.format-check.outcome == 'failure' && github.event_name == 'pull_request'
         run: pnpm run format
 
       - name: Commit formatting changes
-        if: failure() && github.event_name == 'pull_request'
+        id: auto-commit
+        if: steps.format-check.outcome == 'failure' && github.event_name == 'pull_request'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'chore: apply Prettier formatting'
-          file_pattern: '*.* !.github/workflows/*'
+          file_pattern: ':!.github/workflows/** .'
 
       - name: Run lint
+        if: steps.format-check.outcome == 'success' || steps.auto-commit.outputs.changes_detected != 'true'
         run: pnpm run lint
 
   release:
