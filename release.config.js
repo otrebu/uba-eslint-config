@@ -1,3 +1,8 @@
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
+const npmPluginPath = require.resolve("@semantic-release/npm");
+
 export default {
   branches: ["main"],
   plugins: [
@@ -19,7 +24,7 @@ export default {
     ],
     "@semantic-release/release-notes-generator",
     ["@semantic-release/changelog", { changelogFile: "CHANGELOG.md" }],
-    "@semantic-release/npm",
+    { path: npmPluginPath },
     [
       "@semantic-release/git",
       {
