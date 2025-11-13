@@ -107,6 +107,42 @@ Make sure to install these plugins in your project:
 - `prettier-plugin-packagejson`
 - `prettier-plugin-tailwindcss` (if using Tailwind CSS)
 
+## Development
+
+### Testing
+
+This package includes comprehensive validation tests to ensure the ESLint configuration is valid and working correctly:
+
+#### Run all tests
+
+```bash
+pnpm test
+```
+
+#### Test types
+
+1. **Config Validation Tests** (`test:config`)
+   - Tests that the config loads without errors
+   - Validates different app types (fullstack, backendOnly)
+   - Tests feature flags and configuration options
+   - Verifies rule configurations
+   - Run with: `pnpm test:config`
+
+2. **Regression Tests** (`test:fixtures`)
+   - Uses test fixtures with intentional violations
+   - Verifies that rules are actually enabled
+   - Catches accidental rule disabling
+   - Uses `--report-unused-disable-directives` to detect config changes
+   - Run with: `pnpm test:fixtures`
+
+#### Other commands
+
+```bash
+pnpm validate     # Run format check, lint, and tests
+pnpm lint         # Lint the config package itself
+pnpm format       # Format all files with Prettier
+```
+
 ## License
 
 MIT

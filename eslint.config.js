@@ -160,4 +160,5 @@ const baseConfig = generateEslintConfig({
 
 // Export the final configuration.
 // The heavy `import/no-cycle` rule is enabled only when `importCycleCheckMode` is set to "on" (i.e. in CI).
-export default baseConfig;
+// Ignore test files (but not fixtures) to avoid circular dependency (tests validate the config itself)
+export default [{ ignores: ["test/**/*.test.js"] }, ...baseConfig];
