@@ -1,122 +1,77 @@
-import { describe, test, expect } from "vitest";
+import path from "node:path";
+
+import { describe, test, expect, beforeAll } from "vitest";
 import { ESLint } from "eslint";
 
+const fixturePath = (filename) => path.join("test", "fixtures", filename);
+
+const extractRuleIds = (result) =>
+  result.messages.map((message) => message.ruleId).filter(Boolean);
+
 describe("ESLint Rule Configuration", () => {
-  test("no-console rule catches console statements", async () => {
-    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
+  let eslint;
 
-    const codeWithConsole = 'console.log("test");\n';
-    const results = await eslint.lintText(codeWithConsole, {
-      filePath: "test.js",
+  beforeAll(() => {
+    eslint = new ESLint({
+      allowInlineConfig: false,
+      overrideConfigFile: "./eslint.config.js",
     });
-
-    // Should have errors since no-console is enabled
-    expect(results[0].errorCount).toBeGreaterThan(0);
-    const hasNoConsoleError = results[0].messages.some(
-      (m) => m.ruleId === "no-console",
-    );
-    expect(hasNoConsoleError).toBe(true);
   });
 
-  test("no-var rule catches var declarations", async () => {
-    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
+  const lintFixture = async (filename) => {
+    const [result] = await eslint.lintFiles([fixturePath(filename)]);
+    return result;
+  };
 
-    const codeWithVar = "var x = 1;\n";
-    const results = await eslint.lintText(codeWithVar, { filePath: "test.js" });
+  test("javascript baseline rules flag console, var, and max-params violations", async () => {
+    const result = await lintFixture("javascript.js");
+    const ruleIds = extractRuleIds(result);
 
-    // Should have errors since no-var is enabled
-    expect(results[0].errorCount).toBeGreaterThan(0);
-    const hasNoVarError = results[0].messages.some(
-      (m) => m.ruleId === "no-var",
+    expect(ruleIds).toEqual(
+      expect.arrayContaining(["no-console", "no-var", "max-params"]),
     );
-    expect(hasNoVarError).toBe(true);
   });
 
-  test("TypeScript rules are enabled for .ts files", async () => {
-    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
+  test("import ordering and unicorn export rules run on import fixtures", async () => {
+    const result = await lintFixture("imports.js");
+    const ruleIds = extractRuleIds(result);
 
-    const config = await eslint.calculateConfigForFile("test.ts");
-
-    // Check that TypeScript parser is configured
-    expect(config.languageOptions?.parser).toBeDefined();
-
-    // Check that at least some TypeScript rules are enabled
-    const tsRules = Object.keys(config.rules || {}).filter((rule) =>
-      rule.startsWith("@typescript-eslint/"),
+    expect(ruleIds).toEqual(
+      expect.arrayContaining([
+        "perfectionist/sort-imports",
+        "unicorn/prefer-export-from",
+      ]),
     );
-    expect(tsRules.length).toBeGreaterThan(0);
   });
 
-  test("React rules are enabled for .jsx files", async () => {
-    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
+  test("TypeScript-specific rules run on .ts files", async () => {
+    const result = await lintFixture("typescript.ts");
+    const ruleIds = extractRuleIds(result);
 
-    const config = await eslint.calculateConfigForFile("test.jsx");
-
-    // Check that React rules are present
-    const reactRules = Object.keys(config.rules || {}).filter((rule) =>
-      rule.startsWith("react/"),
+    expect(ruleIds).toEqual(
+      expect.arrayContaining([
+        "@typescript-eslint/no-explicit-any",
+        "@typescript-eslint/no-unused-vars",
+      ]),
     );
-    expect(reactRules.length).toBeGreaterThan(0);
-
-    // Check React Hooks rules are present
-    const hooksRules = Object.keys(config.rules || {}).filter((rule) =>
-      rule.startsWith("react-hooks/"),
-    );
-    expect(hooksRules.length).toBeGreaterThan(0);
   });
 
-  test("import rules are configured", async () => {
-    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
+  test("React and a11y rules run on React components", async () => {
+    const result = await lintFixture("react.tsx");
+    const ruleIds = extractRuleIds(result);
 
-    const config = await eslint.calculateConfigForFile("test.js");
-
-    // Check that import rules are present
-    const importRules = Object.keys(config.rules || {}).filter((rule) =>
-      rule.startsWith("import/"),
+    expect(ruleIds).toEqual(
+      expect.arrayContaining([
+        "react/button-has-type",
+        "jsx-a11y/click-events-have-key-events",
+      ]),
     );
-    expect(importRules.length).toBeGreaterThan(0);
   });
 
-  test("unicorn rules are configured", async () => {
-    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
+  test("Vitest plugin rules run on test files", async () => {
+    const result = await lintFixture("vitest.test.ts");
+    const ruleIds = extractRuleIds(result);
 
-    const config = await eslint.calculateConfigForFile("test.js");
-
-    // Check that unicorn rules are present
-    const unicornRules = Object.keys(config.rules || {}).filter((rule) =>
-      rule.startsWith("unicorn/"),
-    );
-    expect(unicornRules.length).toBeGreaterThan(0);
-  });
-
-  test("max-params rule is set to 3", async () => {
-    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
-
-    // Test with 4 parameters (should fail)
-    const codeWithTooManyParams = "function test(a, b, c, d) {}\n";
-    const results = await eslint.lintText(codeWithTooManyParams, {
-      filePath: "test.js",
-    });
-
-    // Should have an error for max-params
-    const hasMaxParamsError = results[0].messages.some(
-      (m) => m.ruleId === "max-params",
-    );
-    expect(hasMaxParamsError).toBe(true);
-  });
-
-  test("prefer-template rule is enabled", async () => {
-    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
-
-    const codeWithConcatenation = 'const message = "Hello " + name;\n';
-    const results = await eslint.lintText(codeWithConcatenation, {
-      filePath: "test.js",
-    });
-
-    // Should suggest using template literals
-    const hasPreferTemplateError = results[0].messages.some(
-      (m) => m.ruleId === "prefer-template",
-    );
-    expect(hasPreferTemplateError).toBe(true);
+    expect(ruleIds).toContain("vitest/expect-expect");
   });
 });

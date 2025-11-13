@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import { describe, test, expect } from "vitest";
 import { ESLint } from "eslint";
 import {
@@ -5,126 +7,106 @@ import {
   generateEslintConfigByFeatures,
 } from "../index.js";
 
-describe("ESLint Config Loading", () => {
-  test("config loads without errors", async () => {
-    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
+const fixture = (filename) => path.join("test", "fixtures", filename);
 
-    expect(eslint).toBeDefined();
-
-    // Try linting a simple file to ensure config actually works
-    const results = await eslint.lintText("const x = 1;\n", {
-      filePath: "test.js",
-    });
-
-    expect(results).toBeDefined();
-    expect(Array.isArray(results)).toBe(true);
+const lintWithConfig = async (config, filename) => {
+  const eslint = new ESLint({
+    allowInlineConfig: false,
+    overrideConfigFile: true,
+    overrideConfig: [{ ignores: [] }, ...config],
   });
 
-  test("generateEslintConfig function exists and is callable", () => {
-    expect(typeof generateEslintConfig).toBe("function");
+  const [result] = await eslint.lintFiles([filename]);
+  return result;
+};
 
-    const fullstackConfig = generateEslintConfig({ appType: "fullstack" });
-    expect(Array.isArray(fullstackConfig)).toBe(true);
-    expect(fullstackConfig.length).toBeGreaterThan(0);
+const collectRuleIds = (result) =>
+  result.messages.map((message) => message.ruleId).filter(Boolean);
 
-    const backendConfig = generateEslintConfig({ appType: "backendOnly" });
-    expect(Array.isArray(backendConfig)).toBe(true);
-    expect(backendConfig.length).toBeGreaterThan(0);
-  });
-
-  test("generateEslintConfigByFeatures function exists and is callable", () => {
-    expect(typeof generateEslintConfigByFeatures).toBe("function");
-
-    const minimalConfig = generateEslintConfigByFeatures({
-      shouldEnableTypescript: false,
-      shouldEnableReact: false,
-      shouldEnableA11y: false,
-      shouldEnableCypress: false,
-      shouldEnableVitest: false,
-      shouldEnableGraphql: false,
-      shouldEnableStorybook: false,
-      shouldEnableQuery: false,
-      shouldEnableRouter: false,
-      shouldEnableBrowserGlobals: false,
-      shouldEnableNodeGlobals: true,
-    });
-
-    expect(Array.isArray(minimalConfig)).toBe(true);
-    expect(minimalConfig.length).toBeGreaterThan(0);
-  });
-
-  test("fullstack config includes React and TypeScript", () => {
+describe("generateEslintConfig", () => {
+  test("fullstack config enforces React and a11y rules", async () => {
     const config = generateEslintConfig({ appType: "fullstack" });
+    const result = await lintWithConfig(config, fixture("react.tsx"));
+    const ruleIds = collectRuleIds(result);
 
-    // Check that React plugin is included by looking for React rules
-    const hasReactRules = config.some((entry) => {
-      const rules = entry.rules || {};
-      return Object.keys(rules).some((rule) => rule.startsWith("react/"));
-    });
-    expect(hasReactRules).toBe(true);
-
-    // Config should have entries for TypeScript files
-    const hasTypeScriptFiles = config.some((entry) => {
-      const files = entry.files || [];
-      return files.some(
-        (pattern) =>
-          pattern.includes("**/*.ts") || pattern.includes("**/*.tsx"),
-      );
-    });
-    expect(hasTypeScriptFiles).toBe(true);
+    expect(ruleIds).toEqual(
+      expect.arrayContaining([
+        "react/button-has-type",
+        "jsx-a11y/click-events-have-key-events",
+      ]),
+    );
   });
 
-  test("backendOnly config excludes React plugins", () => {
+  test("backendOnly config omits React-specific rules", async () => {
     const config = generateEslintConfig({ appType: "backendOnly" });
+    const result = await lintWithConfig(config, fixture("react.tsx"));
+    const ruleIds = collectRuleIds(result);
 
-    // Should not include React-specific rules
-    const hasReactRules = config.some((entry) => {
-      const rules = entry.rules || {};
-      return Object.keys(rules).some((rule) => rule.startsWith("react/"));
-    });
-    expect(hasReactRules).toBe(false);
-
-    // Should not include jsx-a11y rules
-    const hasA11yRules = config.some((entry) => {
-      const rules = entry.rules || {};
-      return Object.keys(rules).some((rule) => rule.startsWith("jsx-a11y/"));
-    });
-    expect(hasA11yRules).toBe(false);
+    expect(ruleIds.some((id) => id?.startsWith("react/"))).toBe(false);
+    expect(ruleIds.some((id) => id?.startsWith("jsx-a11y/"))).toBe(false);
   });
+});
 
-  test("config with TypeScript disabled is smaller", () => {
-    const configWithoutTs = generateEslintConfigByFeatures({
-      shouldEnableTypescript: false,
-      shouldEnableNodeGlobals: true,
-    });
-
-    const configWithTs = generateEslintConfigByFeatures({
+describe("generateEslintConfigByFeatures", () => {
+  test("disabling TypeScript falls back to the JavaScript parser", async () => {
+    const withTypescript = generateEslintConfigByFeatures({
       shouldEnableTypescript: true,
       shouldEnableNodeGlobals: true,
     });
+    const withoutTypescript = generateEslintConfigByFeatures({
+      shouldEnableTypescript: false,
+      shouldEnableNodeGlobals: true,
+    });
 
-    // Config array should be shorter without TypeScript config
-    expect(configWithoutTs.length).toBeLessThan(configWithTs.length);
+    const tsResult = await lintWithConfig(
+      withTypescript,
+      fixture("typescript.ts"),
+    );
+    expect(collectRuleIds(tsResult)).toEqual(
+      expect.arrayContaining([
+        "@typescript-eslint/no-explicit-any",
+        "@typescript-eslint/no-unused-vars",
+      ]),
+    );
 
-    // Config with TypeScript should be valid
-    expect(Array.isArray(configWithoutTs)).toBe(true);
-    expect(configWithoutTs.length).toBeGreaterThan(0);
+    const jsOnlyResult = await lintWithConfig(
+      withoutTypescript,
+      fixture("typescript.ts"),
+    );
+    expect(
+      collectRuleIds(jsOnlyResult).some((id) =>
+        id?.startsWith("@typescript-eslint/"),
+      ),
+    ).toBe(false);
+    expect(
+      jsOnlyResult.messages.some(
+        (msg) => msg.ruleId === null && /Parsing error/i.test(msg.message),
+      ),
+    ).toBe(true);
   });
 
-  test("config works with different file types", async () => {
-    const eslint = new ESLint({ overrideConfigFile: "./eslint.config.js" });
+  test("Vitest feature flag toggles plugin enforcement", async () => {
+    const vitestEnabled = generateEslintConfigByFeatures({
+      shouldEnableVitest: true,
+      shouldEnableNodeGlobals: true,
+    });
+    const vitestDisabled = generateEslintConfigByFeatures({
+      shouldEnableVitest: false,
+      shouldEnableNodeGlobals: true,
+    });
 
-    const fileTypes = [
-      { code: "const x = 1;\n", path: "test.js" },
-      { code: "const x: number = 1;\n", path: "test.ts" },
-      { code: "export const Component = () => <div />;\n", path: "test.jsx" },
-      { code: "export const Component = () => <div />;\n", path: "test.tsx" },
-    ];
+    const withVitest = await lintWithConfig(
+      vitestEnabled,
+      fixture("vitest.test.ts"),
+    );
+    expect(collectRuleIds(withVitest)).toContain("vitest/expect-expect");
 
-    for (const { code, path } of fileTypes) {
-      const results = await eslint.lintText(code, { filePath: path });
-      expect(results).toBeDefined();
-      expect(Array.isArray(results)).toBe(true);
-    }
+    const withoutVitest = await lintWithConfig(
+      vitestDisabled,
+      fixture("vitest.test.ts"),
+    );
+    expect(
+      collectRuleIds(withoutVitest).some((id) => id?.startsWith("vitest/")),
+    ).toBe(false);
   });
 });
