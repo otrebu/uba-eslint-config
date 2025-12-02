@@ -1,3 +1,9 @@
+# [1.2.0](https://github.com/otrebu/uba-eslint-config/compare/v1.1.2...v1.2.0) (2025-12-02)
+
+### Features
+
+- **unicorn:** allow docs and toolsDir abbreviations ([e5dd328](https://github.com/otrebu/uba-eslint-config/commit/e5dd328d30370e6b852ac0536d9fdaaab64c2d23))
+
 ## [1.1.2](https://github.com/otrebu/uba-eslint-config/compare/v1.1.1...v1.1.2) (2025-11-10)
 
 ### Bug Fixes
