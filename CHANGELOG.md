@@ -1,3 +1,9 @@
+# [1.3.0](https://github.com/otrebu/uba-eslint-config/compare/v1.2.0...v1.3.0) (2025-12-02)
+
+### Features
+
+- **unicorn:** allow defaultDir and dir abbreviations ([f4ef077](https://github.com/otrebu/uba-eslint-config/commit/f4ef077af082b81508b4cbdab67e884763140d92))
+
 # [1.2.0](https://github.com/otrebu/uba-eslint-config/compare/v1.1.2...v1.2.0) (2025-12-02)
 
 ### Features
