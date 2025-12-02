@@ -112,6 +112,8 @@ const unicornConfig = {
           ctx: true,
           db: true,
           Db: true,
+          defaultDir: true,
+          dir: true,
           docs: true,
           env: true,
           Env: true,
