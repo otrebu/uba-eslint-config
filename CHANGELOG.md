@@ -1,3 +1,9 @@
+# [1.4.0](https://github.com/otrebu/uba-eslint-config/compare/v1.3.0...v1.4.0) (2025-12-08)
+
+### Features
+
+- **unicorn:** allow rootDir and other directory abbreviations ([d7d021a](https://github.com/otrebu/uba-eslint-config/commit/d7d021afbf90f409b520b7de1a40ca85591d36d4))
+
 # [1.3.0](https://github.com/otrebu/uba-eslint-config/compare/v1.2.0...v1.3.0) (2025-12-02)
 
 ### Features
