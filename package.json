@@ -1,6 +1,6 @@
 {
   "name": "uba-eslint-config",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "ESLint 9 configuration with TypeScript, React, and comprehensive plugin support",
   "keywords": [
     "eslint",

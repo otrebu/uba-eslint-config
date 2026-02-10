@@ -1,3 +1,13 @@
+# [2.0.0](https://github.com/otrebu/uba-eslint-config/compare/v1.4.0...v2.0.0) (2026-02-10)
+
+- feat(config)!: make storybook linting opt-in ([2ccd9f2](https://github.com/otrebu/uba-eslint-config/commit/2ccd9f2962aa71fcab243fd54b52f049b809023c))
+
+### BREAKING CHANGES
+
+- fullstack config no longer enables Storybook rules by default.
+
+Set shouldEnableStorybook to true to keep the previous behavior.
+
 # [1.4.0](https://github.com/otrebu/uba-eslint-config/compare/v1.3.0...v1.4.0) (2025-12-08)
 
 ### Features
