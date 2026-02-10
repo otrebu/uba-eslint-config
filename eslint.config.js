@@ -17,7 +17,7 @@ import promiseConfig from "./configuration/promise.js";
 import queryConfig from "./configuration/query.js";
 import reactConfig from "./configuration/react.js";
 import routerConfig from "./configuration/router.js";
-import storybookConfig from "./configuration/storybook.js";
+import { getStorybookConfig } from "./configuration/storybook.js";
 import typescriptEslintConfig from "./configuration/typescript.js";
 import unicornConfig from "./configuration/unicorn.js";
 import vitestConfig from "./configuration/vitest.js";
@@ -29,8 +29,9 @@ import vitestConfig from "./configuration/vitest.js";
 /**
  * @typedef {Object} EslintConfigOptions
  * @property {boolean} [shouldEnableTypescript=true] - Whether to enable TypeScript configuration
- * @property {'on' | 'off'} [importCycleCheckMode='ci'] - When set to 'on', the heavy `import/no-cycle` rule is disabled locally and enforced only in CI; 'off' enforces it everywhere
+ * @property {'on' | 'off'} [importCycleCheckMode='off'] - When set to 'on', the heavy `import/no-cycle` rule is disabled locally and enforced only in CI; 'off' enforces it everywhere
  * @property {AppType} [appType='fullstack'] - Type of application to configure
+ * @property {boolean} [shouldEnableStorybook=false] - Whether to enable Storybook configuration
  */
 
 /**
@@ -42,6 +43,7 @@ import vitestConfig from "./configuration/vitest.js";
 export function generateEslintConfig({
   appType = "fullstack",
   importCycleCheckMode = "off",
+  shouldEnableStorybook = false,
   shouldEnableTypescript = true,
 }) {
   switch (appType) {
@@ -72,7 +74,7 @@ export function generateEslintConfig({
         shouldEnableQuery: true,
         shouldEnableReact: true,
         shouldEnableRouter: true,
-        shouldEnableStorybook: true,
+        shouldEnableStorybook,
         shouldEnableTypescript,
         shouldEnableVitest: true,
       });
@@ -100,7 +102,7 @@ export function generateEslintConfig({
  * @param {boolean} [options.shouldEnableStorybook=false] - Whether to enable Storybook configuration
  * @param {boolean} [options.shouldEnableQuery=false] - Whether to enable Query configuration
  * @param {boolean} [options.shouldEnableRouter=false] - Whether to enable Router configuration
- * @param {'ci' | 'always'} [options.importCycleCheckMode='ci'] - Control when the heavy `import/no-cycle` rule runs
+ * @param {'on' | 'off'} [options.importCycleCheckMode='off'] - Control when the heavy `import/no-cycle` rule runs
  * @returns {ESLintConfig[]} Array of ESLint configurations
  */
 // eslint-disable-next-line complexity
@@ -136,7 +138,7 @@ export function generateEslintConfigByFeatures({
       : importEslintJavascriptConfig,
     pluginChaiFriendly.configs.recommendedFlat,
     shouldEnableGraphql ? graphqlConfig : undefined,
-    shouldEnableStorybook ? storybookConfig : undefined,
+    shouldEnableStorybook ? getStorybookConfig() : undefined,
     shouldEnableQuery ? queryConfig : undefined,
     shouldEnableRouter ? routerConfig : undefined,
     shouldEnableNodeGlobals ? nodeGlobals : undefined,
@@ -152,6 +154,7 @@ export function generateEslintConfigByFeatures({
 // Choose mode here. Change to 'always' to enforce the rule everywhere.
 const importCycleCheckMode = process.env.CI ? "on" : "off";
 
+/** @type {import("eslint").Linter.Config[]} */
 const baseConfig = generateEslintConfig({
   appType: "fullstack",
   importCycleCheckMode,

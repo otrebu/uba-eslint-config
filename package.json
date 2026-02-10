@@ -52,7 +52,6 @@
     "eslint-plugin-promise": "^7.2.1",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-storybook": "^10.2.8",
     "eslint-plugin-tailwindcss": "^3.18.2",
     "eslint-plugin-unicorn": "^62.0.0",
     "globals": "^17.3.0",
@@ -64,8 +63,25 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.55.0"
   },
+  "peerDependencies": {
+    "eslint-plugin-storybook": "^10.2.8",
+    "storybook": "^10.2.8"
+  },
+  "peerDependenciesMeta": {
+    "eslint-plugin-storybook": {
+      "optional": true
+    },
+    "storybook": {
+      "optional": true
+    }
+  },
   "packageManager": "pnpm@10.6.5+sha512.cdf928fca20832cd59ec53826492b7dc25dc524d4370b6b4adbf65803d32efaa6c1c88147c0ae4e8d579a6c9eec715757b50d4fa35eea179d868eada4ed043af",
   "publishConfig": {
     "access": "public"
+  },
+  "pnpm": {
+    "overrides": {
+      "eslint-plugin-canonical>@typescript-eslint/utils": "8.55.0"
+    }
   }
 }

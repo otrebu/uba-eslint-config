@@ -10,7 +10,7 @@ A comprehensive ESLint 9 configuration with TypeScript, React, and extensive plu
 - **Testing**: Vitest and Cypress support
 - **Code Quality**: Unicorn, Promise, Import, and more
 - **Sorting & Formatting**: Perfectionist for consistent code organization
-- **GraphQL**, **TanStack Query**, **TanStack Router**, and **Storybook** support
+- **GraphQL**, **TanStack Query**, **TanStack Router**, and optional **Storybook** support
 
 ## Included Plugins
 
@@ -24,7 +24,7 @@ A comprehensive ESLint 9 configuration with TypeScript, React, and extensive plu
 - `@vitest/eslint-plugin`
 - `eslint-plugin-jsx-a11y`
 - `eslint-plugin-react` & `eslint-plugin-react-hooks`
-- `eslint-plugin-storybook`
+- `eslint-plugin-storybook` (optional, opt-in)
 - `eslint-plugin-tailwindcss`
 - `@graphql-eslint/eslint-plugin`
 - `@tanstack/eslint-plugin-query`
@@ -54,8 +54,20 @@ import { generateEslintConfig } from "uba-eslint-config";
 
 export default generateEslintConfig({
   appType: "fullstack", // or "backendOnly"
+  shouldEnableStorybook: false,
   shouldEnableTypescript: true,
   importCycleCheckMode: "off", // "off" or "on" (CI only)
+});
+```
+
+Enable Storybook rules only when needed:
+
+```js
+import { generateEslintConfig } from "uba-eslint-config";
+
+export default generateEslintConfig({
+  appType: "fullstack",
+  shouldEnableStorybook: true,
 });
 ```
 
@@ -106,6 +118,7 @@ Make sure to install these plugins in your project:
 
 - `prettier-plugin-packagejson`
 - `prettier-plugin-tailwindcss` (if using Tailwind CSS)
+- `eslint-plugin-storybook@^10.2.8` (if enabling Storybook lint rules)
 - `storybook@^10.2.8` (if enabling Storybook lint rules)
 
 ## License
