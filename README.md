@@ -106,6 +106,7 @@ Make sure to install these plugins in your project:
 
 - `prettier-plugin-packagejson`
 - `prettier-plugin-tailwindcss` (if using Tailwind CSS)
+- `storybook@^10.2.8` (if enabling Storybook lint rules)
 
 ## License
 
